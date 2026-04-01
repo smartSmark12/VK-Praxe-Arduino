@@ -1,7 +1,7 @@
 <!-- VK -->
 
 
-<!-- obsah -->
+<!-- obsah - autogen -->
 Obsah hehe
 - [Arduino UNO](#arduino-uno)
   - [Odpory LED](#odpory-led)
@@ -14,6 +14,8 @@ Obsah hehe
     - [Blikání LEDky pomocí periody](#blikání-ledky-pomocí-periody)
     - [Blikání LEDky pomocí frekvence](#blikání-ledky-pomocí-frekvence)
     - [Blikání dvou externích LEDek nastřídačku](#blikání-dvou-externích-ledek-nastřídačku)
+  - [Tlačítka](#tlačítka)
+    - [Dvě tlačítka ovládající dvě ledky](#dvě-tlačítka-ovládající-dvě-ledky)
 
 
 <!-- actually data -->
@@ -55,6 +57,8 @@ Obsah hehe
   - resistor cílový $R =$ $?$
   - $R = \frac{U}{I} = \frac{3.2V}{20mA} = \frac{3.2V}{0.02A} = 160 Ω$
 
+
+<!-- příkazy -->
 # Reference příkazů
 Reference a příklady použití základních příkazů
 
@@ -78,7 +82,16 @@ Reference a příklady použití základních příkazů
     digitalWrite(5, LOW);
     ```
     - [příklad blikání LEDky](#blikání-ledky)
+- digitalRead( vývod: int ) -> stav: LOW | HIGH
+    ``` c
+    digitalRead(4);
+    status = digitalRead(4);
+    if (digitalRead(4) == LOW) doSomething();
+    ```
+    - *pozn.: při použití **pinMode INPUT** a pull-up **resistoru** je stisknutí značeno stavem **LOW**, ne HIGH*
 
+
+<!-- příklady -->
 # Jednoduché příklady
 Příklady a zadání z hodin v [programs](/programs/)
 
@@ -160,5 +173,37 @@ void blinkByPinID (int pinID) {   // funkce, která blikne danou ledkou po dobu 
     digitalWrite(pinID, HIGH);
     delay(timeout);
     digitalWrite(pinID, LOW);
+}
+```
+
+## Tlačítka
+### Dvě tlačítka ovládající dvě ledky
+``` c
+int led1 = 7;                   // LEDky ukazující stavy
+int led2 = 9;
+
+int inp1 = 4;                   // čtecí tlačítka
+int inp2 = 5;
+
+void setup() {
+    pinMode(inp1, INPUT);       // nastavení čtení na vstupních pinech (tlačítka)
+    pinMode(inp2, INPUT);
+
+    pinMode(led1, OUTPUT);      // nastavení výstupu na LEDky
+    pinMode(led2, OUTPUT);
+}
+
+void loop() {
+    if (digitalRead(inp1) == LOW) {
+      digitalWrite(led1, HIGH); // pokud tlačítko stisknuto, rozsviť LEDku
+    } else {
+      digitalWrite(led1, LOW);  // jinak zhasni
+    }
+
+    if (digitalRead(inp2) == LOW) {
+      digitalWrite(led2, HIGH); // to samé pro druhé tlačítko
+    } else {
+      digitalWrite(led2, LOW);
+    }
 }
 ```
