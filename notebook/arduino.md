@@ -76,12 +76,15 @@ Reference a příklady použití základních příkazů
     pinMode(8, INPUT);
     ```
     - [příklad blikání LEDky](#blikání-ledky)
+    - [příklad na použití pullup](/programs/tlačítka/tlacitka_on3s_on2s_chooser_pullup/tlacitka_on3s_on2s_chooser_pullup.ino)
+
 - digitalWrite( vývod: int, stav: LOW | HIGH )
     ``` c
     digitalWrite(13, HIGH);
     digitalWrite(5, LOW);
     ```
     - [příklad blikání LEDky](#blikání-ledky)
+
 - digitalRead( vývod: int ) -> stav: LOW | HIGH
     ``` c
     digitalRead(4);
@@ -177,6 +180,8 @@ void blinkByPinID (int pinID) {   // funkce, která blikne danou ledkou po dobu 
 ```
 
 ## Tlačítka
+Další příklady v [programs/tlačítka](/programs/tlačítka/)
+
 ### Dvě tlačítka ovládající dvě ledky
 ``` c
 int led1 = 7;                   // LEDky ukazující stavy
