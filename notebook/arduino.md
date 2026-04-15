@@ -16,6 +16,8 @@ Obsah hehe
     - [Blikání dvou externích LEDek nastřídačku](#blikání-dvou-externích-ledek-nastřídačku)
   - [Tlačítka](#tlačítka)
     - [Dvě tlačítka ovládající dvě ledky](#dvě-tlačítka-ovládající-dvě-ledky)
+    - ['Hloupá' ochrana zákmitu](#hloupá-ochrana-zákmitu)
+    - [Zjednodušená 'hloupá' ochrana zákmitu](#zjednodušená-hloupá-ochrana-zákmitu)
 
 
 <!-- actually data -->
@@ -92,6 +94,7 @@ Reference a příklady použití základních příkazů
     if (digitalRead(4) == LOW) doSomething();
     ```
     - *pozn.: při použití **pinMode INPUT** a pull-up **resistoru** je stisknutí značeno stavem **LOW**, ne HIGH*
+    - [příklad ochrany zákmitu](#hloupá-ochrana-zákmitu)
 
 
 <!-- příklady -->
@@ -180,7 +183,7 @@ void blinkByPinID (int pinID) {   // funkce, která blikne danou ledkou po dobu 
 ```
 
 ## Tlačítka
-Další příklady v [programs/tlačítka](/programs/tlačítka/)
+Další příklady v [programs/tlačítka](/programs/tlačítka/), popř. příklady na ochranu zákmitu v [programs/zákmity](/programs/zákmity/)
 
 ### Dvě tlačítka ovládající dvě ledky
 ``` c
@@ -210,5 +213,89 @@ void loop() {
     } else {
       digitalWrite(led2, LOW);
     }
+}
+```
+
+### 'Hloupá' ochrana zákmitu
+``` c
+int led1 = 7;
+int led2 = 9;
+
+int inp1 = 4;
+int inp2 = 5;
+
+bool status = false;
+
+int dumbDelay = 100; //ms
+
+void setup() {
+    pinMode(inp1, INPUT_PULLUP);        // *využito pullup zapojení
+    pinMode(inp2, INPUT_PULLUP);
+
+    pinMode(led1, OUTPUT);
+    pinMode(led2, OUTPUT);
+}
+
+void loop() {
+    while (digitalRead(inp1) == HIGH);  // čekáme na stisk tlačítka
+    digitalWrite(led1, HIGH);           // rozsvítíme ledku
+    delay(dumbDelay);                   // počkáme po dobu možného zákmitu
+    while (digitalRead(inp1) == LOW);   // čekáme na rozepnutí tlačítka
+    delay(dumbDelay);                   // znovu počkáme při zákmitu
+
+    while (digitalRead(inp1) == HIGH);
+    digitalWrite(led1, LOW);
+    delay(dumbDelay);
+    while (digitalRead(inp1) == LOW);
+    delay(dumbDelay);
+}
+```
+
+### Zjednodušená 'hloupá' ochrana zákmitu
+``` c
+int led1 = 7;
+int led2 = 9;
+
+int inp1 = 4;
+int inp2 = 5;
+
+int counter1 = 0;                             // dvě oddělená počítadla
+int counter2 = 0;
+
+int dumbDelay = 100; //ms
+
+void setup() {
+    pinMode(inp1, INPUT_PULLUP);
+    pinMode(inp2, INPUT_PULLUP);
+
+    pinMode(led1, OUTPUT);
+    pinMode(led2, OUTPUT);
+}
+
+void loop() {
+    if (handleClick(inp1)) counter1++;         // při rozepnutí daného tlačítka se k danému počítadlu přičte 1
+    if (handleClick(inp2)) counter2++;
+
+    if (counter1 > 5-1 || counter2 > 8-1) {    // pokud counter1 dosáhl 5 stisků nebo counter2 8, rozsvítíme ledku
+      ledOn(led1);
+    }
+}
+
+bool handleClick(int buttonID) {               // funkce vracející true nebo false na základě toho, jestli dané tlačítko bylo stisknuto (blokující) a rozepnuto
+    if (digitalRead(buttonID) == LOW) {        // nečeká na stisknutí, jen ho přečte (neblokující)
+        delay(dumbDelay);
+        while (digitalRead(buttonID) == LOW);  // počká na rozepnutí (blokující)
+        delay(dumbDelay);
+        return true;
+    }
+    return false;
+}
+
+void ledOn(int ledID) {                        // pomocné funkce na rozsvěcení a zhasínání ledek
+    digitalWrite(ledID, HIGH);
+}
+
+void ledOff(int ledID) {
+    digitalWrite(ledID, LOW);
 }
 ```
