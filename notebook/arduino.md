@@ -58,6 +58,7 @@ Obsah hehe
   - resistor cílové $U = 5V-1.8V = 3.2V$
   - resistor cílový $R =$ $?$
   - $R = \frac{U}{I} = \frac{3.2V}{20mA} = \frac{3.2V}{0.02A} = 160 Ω$
+  - [*příklady*](/notebook/příklady_resistory.md)
 
 
 <!-- příkazy -->
@@ -70,6 +71,13 @@ Reference a příklady použití základních příkazů
     delay(500);
     delay(perioda / 2);
     ```
+
+- millis () -> čas v ms od spuštění programu
+  ```c
+  unsigned long time = millis();
+  ```
+  - *pozn.: z důvodu přetékání času **nepoužíváme byte** ani **int**; lze použít long, ale jelikož čas nemůže být záporný, používá se **unsigned long***
+  - [příklad využití millis](/programs/millis/millis_held_for_nonblocking/millis_held_for_nonblocking.ino)
 
 ## IO
 - pinMode( vývod: int, režim: OUTPUT | INPUT | INPUT_PULLUP )
