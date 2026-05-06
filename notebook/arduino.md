@@ -18,6 +18,8 @@ Obsah hehe
     - [Dvě tlačítka ovládající dvě ledky](#dvě-tlačítka-ovládající-dvě-ledky)
     - ['Hloupá' ochrana zákmitu](#hloupá-ochrana-zákmitu)
     - [Zjednodušená 'hloupá' ochrana zákmitu](#zjednodušená-hloupá-ochrana-zákmitu)
+  - [PWM](#pwm)
+    - [Vánoční blikání](#vánoční-blikání)
 
 
 <!-- actually data -->
@@ -94,6 +96,14 @@ Reference a příklady použití základních příkazů
     digitalWrite(5, LOW);
     ```
     - [příklad blikání LEDky](#blikání-ledky)
+
+- analogWrite( vývod: int, hodnota: byte <0-255> )
+    ``` c
+    analogWrite(11, 26);
+    analogWrite(5, 255);
+    ```
+    - *pozn.: pro analogWrite lze použít jen [označené PWM vývody](#arduino-uno)*
+    - [příklady použítí PWM s LEDkami](/programs/pwm/)
 
 - digitalRead( vývod: int ) -> stav: LOW | HIGH
     ``` c
@@ -305,5 +315,53 @@ void ledOn(int ledID) {                        // pomocné funkce na rozsvěcen�
 
 void ledOff(int ledID) {
     digitalWrite(ledID, LOW);
+}
+```
+
+## PWM
+Další příklady na PWM v [programs/pwm](/programs/pwm/)
+
+### Vánoční blikání
+``` c
+int led1 = 6;
+int led2 = 9;
+
+unsigned long phaseStart;
+int phaseTimeout = 1000* 1;//ms
+bool phaseSwitch = false;
+
+void setup() {
+    pinMode(led1, OUTPUT);
+    pinMode(led2, OUTPUT);
+}
+
+void loop() {
+
+    if (millis() - phaseStart > phaseTimeout) {                                 // přepínání fáze světýlek podle uplynutého času od posledního přepnutí
+        phaseStart = millis();
+        phaseSwitch = !phaseSwitch;
+    }
+
+    if (phaseSwitch) {                                                          // využítí přepínače fáze pro výběr správné fáze (*the missile knows where it is, ...*) 
+        phaseDown();
+    } else {
+        phaseUp();
+    }
+}
+
+void phaseUp() {
+    setBrightnessPercent(led1, (millis() - phaseStart) / 10);                   // nastavení jasu podle uplynutého času od posledního přepnutí (přímá)
+    setBrightnessPercent(led2, (phaseTimeout - (millis() - phaseStart)) / 10);  // -||- (invertovaná)
+}
+
+void phaseDown() {
+    setBrightnessPercent(led2, (millis() - phaseStart) / 10);                   // invertovaná fáze
+    setBrightnessPercent(led1, (phaseTimeout - (millis() - phaseStart)) / 10);
+}
+
+void setBrightnessPercent(int ledID, float brightnessPercent) {
+    int brightness = 255 * (brightnessPercent / 100);                           // přepočet procent jasu (0-100) na platnou PWM hodnotu (0-255)
+
+    analogWrite(ledID, brightness);
 }
 ```
