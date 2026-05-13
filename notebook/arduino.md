@@ -20,6 +20,8 @@ Obsah hehe
     - [Zjednodušená 'hloupá' ochrana zákmitu](#zjednodušená-hloupá-ochrana-zákmitu)
   - [PWM](#pwm)
     - [Vánoční blikání](#vánoční-blikání)
+  - [Analogové vstupy](#analogové-vstupy)
+    - [Výpis analogového vstupu](#výpis-analogového-vstupu)
 
 
 <!-- actually data -->
@@ -113,6 +115,13 @@ Reference a příklady použití základních příkazů
     ```
     - *pozn.: při použití **pinMode INPUT** a pull-up **resistoru** je stisknutí značeno stavem **LOW**, ne HIGH*
     - [příklad ochrany zákmitu](#hloupá-ochrana-zákmitu)
+
+- analogRead( vývod: int ) -> stav: int <0-1023>
+    ``` c
+    analogRead(A1);
+    status = analogRead(A1);
+    ```
+    - [příklady analogového vstupu](#analogové-vstupy)
 
 
 <!-- příklady -->
@@ -363,5 +372,22 @@ void setBrightnessPercent(int ledID, float brightnessPercent) {
     int brightness = 255 * (brightnessPercent / 100);                           // přepočet procent jasu (0-100) na platnou PWM hodnotu (0-255)
 
     analogWrite(ledID, brightness);
+}
+```
+
+## Analogové vstupy
+Další příklady na analogové vstupy v [programs/analog](/programs/analog/)
+
+### Výpis analogového vstupu
+``` c
+int ani1 = A1;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int val = analogRead(ani1);
+  Serial.println(val);
 }
 ```
