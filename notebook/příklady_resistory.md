@@ -16,3 +16,13 @@
 
 
 ![resistory 1 ukázka](assets/resistors1.png)
+
+# Neznámý resistor
+
+1) x = 400  
+   U<sub>x</sub> = $400/1023 * 5V = 1.995V$  
+   U<sub>R</sub> = $5V - 1.995V = 3.045V$  
+   $\frac{Ux}{Ur}=\frac{Rx}{R}$  
+   $Rx = \frac{Ux}{Ur} * R = 1.955V/3.045V * 1000 = 642Ω$
+
+![resistory zápis z hodiny](assets/resistors_zapis.jpg)

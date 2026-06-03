@@ -22,6 +22,7 @@ Obsah hehe
     - [Vánoční blikání](#vánoční-blikání)
   - [Analogové vstupy](#analogové-vstupy)
     - [Výpis analogového vstupu](#výpis-analogového-vstupu)
+    - [Ohm-metr](#ohm-metr)
 
 
 <!-- actually data -->
@@ -380,14 +381,42 @@ Další příklady na analogové vstupy v [programs/analog](/programs/analog/)
 
 ### Výpis analogového vstupu
 ``` c
-int ani1 = A1;
+int ani1 = A1;                 // není potřeba nastavovat pinMode
 
 void setup() {
-  Serial.begin(9600);
+    Serial.begin(9600);
 }
 
 void loop() {
-  int val = analogRead(ani1);
-  Serial.println(val);
+    int val = analogRead(ani1);
+    Serial.println(val);
+}
+```
+
+### Ohm-metr
+[vybráno odsud](/programs/analog/analog_ohmmeter/analog_ohmmeter.ino)
+``` c
+int ani1 = A1;
+
+int maxVolt = 5;
+int knownRes = 270;                                 // odpor známého resistoru v ohmech
+
+int readData;
+
+void setup() {
+    Serial.begin(9600);
+}
+
+void loop() {
+    readData = analogRead(ani1);
+    Serial.println(String(getRes(readData)) + " Ω");
+}
+
+float getRes(int analogData) {
+    float source = maxVolt;                         // zdrojové napětí (5V)
+    float measured = analogData / 1023. * maxVolt;  // napětí změřeného odporu
+    float known = source - measured;                // napětí známého odporu
+
+    return measured / known * knownRes;
 }
 ```

@@ -1,4 +1,4 @@
-int ani1 = A1;
+int ani1 = A1; // dont need to set pinMode
 
 int led1 = 6;
 
@@ -15,9 +15,9 @@ void setup() {
 }
 
 void loop() {
-  brightness = maxBrightness * (analogRead(ani1) / 1024.);
+  brightness = maxBrightness * (analogRead(ani1) / 1024.); // using 1024. to force float division
   brightness = clamp(brightness, minBrightness, maxBrightness);
-  
+
   analogWrite(led1, brightness);
 }
 
