@@ -10,7 +10,7 @@ float triggerLightLevel = 2000;//ohm
 int readData;
 
 unsigned long doorOpenTime;//millis
-int doorTriggerTime = 1000* 3;//sec
+int doorTriggerTime = 1000* 10;//sec
 bool wasDoorOpen = false;
 
 void setup() {
